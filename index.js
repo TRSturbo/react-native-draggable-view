@@ -115,19 +115,16 @@ export default class component extends Component {
     this.props.onRelease && this.props.onRelease(isGoingToUp);
   }
 
-  render() {
-    var containerView = this.props.renderContainerView ? this.props.renderContainerView() : null;
-    var drawerView = this.props.renderDrawerView ? this.props.renderDrawerView() : null;
-    var initDrawerView = this.props.renderInitDrawerView ? this.props.renderInitDrawerView() : null;
-    var drawerPosition = {
-      top: this.state.position
-    };
+  renderDrawer() {
+    var hidden = this.props.hidden ? this.props.hidden : false;
+    if (!hidden) {
+      var drawerView = this.props.renderDrawerView ? this.props.renderDrawerView() : null;
+      var initDrawerView = this.props.renderInitDrawerView ? this.props.renderInitDrawerView() : null;
 
-    return (
-      <View style={styles.viewport}>
-        <View style={styles.container}>
-          {containerView}
-        </View>
+      var drawerPosition = {
+        top: this.state.position
+      };
+      return (
         <Animated.View
           style={[drawerPosition, styles.drawer,
             { backgroundColor: this.props.drawerBg ? this.props.drawerBg : 'white' }]}
@@ -147,7 +144,23 @@ export default class component extends Component {
           </TouchableWithoutFeedback>
           {drawerView}
         </Animated.View>
+      );
+    } else {
+      return null;
+    }
+  }
 
+  render() {
+    var containerView = this.props.renderContainerView ? this.props.renderContainerView() : null;
+
+    drawerView = this.renderDrawer();
+
+    return (
+      <View style={styles.viewport}>
+        <View style={styles.container}>
+          {containerView}
+        </View>
+        {drawerView}
       </View >
     );
   }
