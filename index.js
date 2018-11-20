@@ -14,18 +14,24 @@ import {
   PanResponder,
   Dimensions, TouchableOpacity
 } from 'react-native';
+import PropTypes from 'prop-types';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 export default class component extends Component {
+  static propTypes = {
+    onDrag: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props)
     // naming it initialX clearly indicates that the only purpose
     // of the passed down prop is to initialize something internally
     const initialUsedSpace = Math.abs(this.props.initialDrawerSize);
     const initialDrawerSize = (SCREEN_HEIGHT * (1 - initialUsedSpace));
+    var drawerHeight = this.props.drawerHeight
 
 
     var finalDrawerSize = this.props.finalDrawerHeight ? this.props.finalDrawerHeight : 0;
-    // console.log(initialDrawerSize, 'Initila size');
+
     this.state = {
       touched: 'FALSE',
       position: new Animated.Value(initialDrawerSize),
@@ -75,6 +81,8 @@ export default class component extends Component {
     this._previousTop = position;
     // console.log('Position ', position);
     const { initialPosition } = this.state
+
+    this.props.onDrag(position, SCREEN_HEIGHT);
 
     if (initialPosition === position) {
       this.props.onInitialPositionReached && this.props.onInitialPositionReached();
